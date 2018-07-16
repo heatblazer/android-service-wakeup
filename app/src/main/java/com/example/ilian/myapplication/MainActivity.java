@@ -1,4 +1,5 @@
 package com.example.ilian.myapplication;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -21,39 +22,75 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
+import android.app.AlarmManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     String msg = "TestActivity";
-    AlarmService mService = null;
     boolean mBound = false;
+
+    Intent mServiceIntent = null;
+    private SensorService mSensorService = null;
+    Context ctx;
+
+    public Context getCtx()
+    {
+        return  ctx;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        ctx = this;
+
         setContentView(R.layout.activity_main);
+
+        mSensorService = new SensorService(getCtx());
+        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
+        if (!isMyServiceRunning(mSensorService.getClass()))
+        {
+            startService(mServiceIntent);
+        }
+
         Log.d(msg, "The onCreate() event");
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.d ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.d ("isMyServiceRunning?", false+"");
+        return false;
+    }
+
+
 
     @Override
     protected void onStart()
     {
         super.onStart();
         // start the service
-        Intent intent = new Intent(this, AlarmService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent(this, AlarmService.class);
+//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
 
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+    */
 
 
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -68,10 +105,12 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    */
     private  Thread mThread = null;
 
     private void startMessager()
     {
+        /*
         mThread = new Thread(new Runnable() {
             @Override
             public void run()
@@ -90,6 +129,7 @@ public class MainActivity extends Activity {
         });
 
         mThread.start();
+        */
     }
 
     // service connection
@@ -98,6 +138,7 @@ public class MainActivity extends Activity {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
+            /*
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
             mService = binder.getService();
@@ -107,13 +148,24 @@ public class MainActivity extends Activity {
             {
                 startMessager();
             }
+            */
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
+        public void onServiceDisconnected(ComponentName arg0)
+        {
             mBound = false;
         }
     };
 
+
+    @Override
+    protected void onDestroy()
+    {
+        stopService(mServiceIntent);
+        Log.i("[IVZ]", "MainActivity.onDestroy()!");
+        super.onDestroy();
+
+    }
 
 }
