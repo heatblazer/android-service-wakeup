@@ -1,12 +1,15 @@
 package com.example.ilian.myapplication;
+import android.Manifest;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -33,6 +36,19 @@ public class MainActivity extends AppCompatActivity {
     private SensorService mSensorService = null;
     Context ctx;
 
+    private void setupUserPerms()
+    {
+        if (Build.VERSION.SDK_INT >= 22)
+        {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]
+                            {
+                                    Manifest.permission.INTERNET,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            }, 1);
+        }
+    }
+
     public Context getCtx()
     {
         return  ctx;
@@ -45,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ctx = this;
 
         setContentView(R.layout.activity_main);
+        setupUserPerms(); // ivz - test
 
         mSensorService = new SensorService(getCtx());
         mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
