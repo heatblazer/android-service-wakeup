@@ -4,12 +4,14 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -38,14 +40,25 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupUserPerms()
     {
-        if (Build.VERSION.SDK_INT >= 22)
+        if (Build.VERSION.SDK_INT >= 23)
         {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+                    != PackageManager.PERMISSION_GRANTED)
+            {
+                Log.d("[IVZ]",  "Over 23 API - no permission on internet");
+            }
+            else
+            {
+                Log.d("[IVZ]", "Over 23 API - we have internet perms");
+            }
+            /*
             ActivityCompat.requestPermissions(MainActivity.this,
                     new String[]
                             {
                                     Manifest.permission.INTERNET,
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                             }, 1);
+            */
         }
     }
 

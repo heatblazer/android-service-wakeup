@@ -10,12 +10,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Timer;
@@ -28,6 +30,8 @@ import java.util.TimerTask;
  */
 public class SensorService extends Service {
     public int counter = 0;
+
+    private final  String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
 
     UrlConnection mUrl = null;
 
@@ -59,12 +63,45 @@ public class SensorService extends Service {
         return file;
     }
 
+
+    String getCsvWParams(String param)
+    {
+        return  URL_401474_CSV + param;
+    }
+
     /*
-    wget -c 'https://thingspeak.com/channels/401474/field/1.json?callback=?&amp;offset=0&amp;days=1'
-    wget -c 'https://thingspeak.com/channels/401474/feed.json'
-    wget -c 'https://thingspeak.com/channels/401474/feed.xml'
-    wget -c 'https://thingspeak.com/channels/401474/feed.csv'
+    'https://thingspeak.com/channels/401474/field/1.json?callback=?&amp;offset=0&amp;days=1'
+     'https://thingspeak.com/channels/401474/feed.json'
+    'https://thingspeak.com/channels/401474/feed.xml'
+    'https://thingspeak.com/channels/401474/feed.csv?results=1'
      */
+
+
+    private String readStram(InputStream input)
+    {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        String line = null;
+        try
+        {
+            while ((line = reader.readLine()) != null)
+            {
+                sb.append(line);
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (Exception ex) {}
+        }
+        return  sb.toString();
+    }
 
     private  void testHttp()
     {
@@ -72,24 +109,21 @@ public class SensorService extends Service {
         HttpURLConnection urlConnection = null;
         try
         {
-//            url = new URL("https://thingspeak.com/channels/401474/feed.json");
-            url = new URL("http://www.nucleusys.com");
+            String text = getCsvWParams("?results=1");
+            url = new URL(text);
 
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            int size = in.available();
-            byte[] data = new byte[size];
 
-            if (in.read(data, 0, size) <= 0)
+            String output = readStram(in);
+            if (output != null)
             {
-                Log.d("[IVZ]:", "No data from URL");
+                Log.d("IVZ", output);
             }
             else
             {
-                String s = new String(data);
-                Log.d("[IVZ]:" , s);
+                Log.d("IVZ", "No output");
             }
-
         }
         catch (Exception ex)
         {
@@ -163,7 +197,8 @@ public class SensorService extends Service {
     }
 
 
-    public void stoptimertask() {
+    public void stoptimertask()
+    {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer.cancel();
