@@ -8,6 +8,18 @@ import android.content.Intent;
 import android.os.PowerManager;
 import android.widget.Toast;
 
+/**
+ * alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+ Intent intent = new Intent(context, AlarmReceiver.class);
+ alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+
+ alarmMgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+ SystemClock.elapsedRealtime() +
+ 60 * 1000, alarmIntent);
+ */
+
+
+
 public class Alarm extends BroadcastReceiver
 {
     @Override
@@ -25,7 +37,7 @@ public class Alarm extends BroadcastReceiver
     public void setAlarm(Context context)
     {
         AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, Alarm.class);
+        Intent i = new Intent(context, AlarmReciever.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
  //       am.setAlarmClock();
 //        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000, pi); // Millisec * Second * Minute

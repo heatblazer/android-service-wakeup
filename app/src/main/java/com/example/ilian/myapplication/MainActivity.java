@@ -88,8 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE))
+        {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+            {
                 Log.d ("isMyServiceRunning?", true+"");
                 return true;
             }
@@ -108,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, AlarmService.class);
 //        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
-
 
     /*
     @Override
@@ -163,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // service connection
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection()
+    {
 
         @Override
         public void onServiceConnected(ComponentName className,
@@ -188,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onDestroy()
     {
@@ -197,5 +198,4 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
-
 }

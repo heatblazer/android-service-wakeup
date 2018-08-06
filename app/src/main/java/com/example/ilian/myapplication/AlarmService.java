@@ -25,9 +25,11 @@ public class AlarmService extends Service
                 while (true)
                 {
                     Log.d("[IVZ]ServiceThread", "Serviice thread is running....");
-                    try {
+                    try
+                    {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException e)
+                    {
                         e.printStackTrace();
                     }
                 }
