@@ -24,50 +24,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
-/**
- * Created by fabio on 30/01/2016.
- */
-public class SensorService extends Service {
-    public int counter = 0;
-
-    private final  String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
-
-    UrlConnection mUrl = null;
-
-    Alarm mAlarm = null;
-
-    File mFile = null;
-
-    public SensorService(Context applicationContext) {
-        super();
-        Log.d("[IVZ]", "Simple service started...");
-        mFile = getTempFile(applicationContext, "myTestFile");
-        int a = 0;
-    }
-
-    public SensorService()
-    {
-    }
-
-    private File getTempFile(Context context, String url) {
-        File file = null;
-        try
-        {
-            String fileName = Uri.parse(url).getLastPathSegment();
-            file = File.createTempFile(fileName, null, context.getCacheDir());
-        } catch (IOException e)
-        {// Error while creating file
-        }
-        return file;
-    }
-
-
-    String getCsvWParams(String param)
-    {
-        return  URL_401474_CSV + param;
-    }
-
     /*
     'https://thingspeak.com/channels/401474/field/1.json?callback=?&amp;offset=0&amp;days=1'
      'https://thingspeak.com/channels/401474/feed.json'
@@ -76,7 +32,19 @@ public class SensorService extends Service {
      */
 
 
-    private String readStram(InputStream input)
+public class HttpService extends  Service
+{
+
+    private final  String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
+
+    private  static int counter = 0;
+    private HttpService() {}
+    private File mFile = null;
+    private Timer mTimer = null;
+    private TimerTask timerTask = null;
+
+
+    private String readStream(InputStream input)
     {
         StringBuilder sb = new StringBuilder();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -102,6 +70,37 @@ public class SensorService extends Service {
         return  sb.toString();
     }
 
+
+    private File getTempFile(Context context, String url)
+    {
+        File file = null;
+        try
+        {
+            String fileName = Uri.parse(url).getLastPathSegment();
+            file = File.createTempFile(fileName, null, context.getCacheDir());
+        } catch (IOException e)
+        {
+        }
+        return file;
+    }
+
+    private void writeTestFile()
+    {
+        try
+        {
+            testHttp();
+            String s = new String("TESTTIMER +++ " + (counter++));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    String getCsvWParams(String param)
+    {
+        return  URL_401474_CSV + param;
+    }
+
+
     private  void testHttp()
     {
         URL url = null;
@@ -114,7 +113,7 @@ public class SensorService extends Service {
             urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
 
-            String output = readStram(in);
+            String output = readStream(in);
             if (output != null)
             {
                 Log.d("IVZ", output);
@@ -132,59 +131,27 @@ public class SensorService extends Service {
         {
             urlConnection.disconnect();
         }
-
     }
 
-
-    private void writeTestFile()
+    public  HttpService(Context ctx)
     {
-        try
-        {
-            testHttp();
-            String s = new String("TESTTIMER +++ " + (counter++));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super();
+        Log.d("[IVZ]", "Simple service started...");
+        mFile = getTempFile(ctx, "myTestFile");
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        startTimer();
-//        mAlarm = new Alarm();
-//        mAlarm.setAlarm(this);
-//        mUrl = new UrlConnection();
-//        mUrl.Create();
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("EXIT", "ondestroy!");
-        Intent broadcastIntent = new Intent("com.example.ilian.ServiceRestarter");
-        sendBroadcast(broadcastIntent);
-        stoptimertask();
-    }
-
-    private Timer timer;
-    private TimerTask timerTask;
-    long oldTime = 0;
-
-    public void startTimer() {
+    public void startTimer()
+    {
         //set a new Timer
-        timer = new Timer();
+        mTimer= new Timer();
 
         //initialize the TimerTask's job
         initializeTimerTask();
 
         //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 10000); //
+        mTimer.schedule(timerTask, 1000, 10000); //
     }
 
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
     public void initializeTimerTask()
     {
         timerTask = new TimerTask()
@@ -199,17 +166,41 @@ public class SensorService extends Service {
     public void stoptimertask()
     {
         //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
         }
     }
 
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        startTimer();
+//        mAlarm = new Alarm();
+//        mAlarm.setAlarm(this);
+//        mUrl = new UrlConnection();
+//        mUrl.Create();
+        return START_STICKY;
+    }
+
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(Intent intent)
+    {
         return null;
     }
-}
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("EXIT", "ondestroy!");
+        Intent broadcastIntent = new Intent("com.example.ilian.ServiceRestarter");
+        sendBroadcast(broadcastIntent);
+        stoptimertask();
+    }
+
+
+
+}

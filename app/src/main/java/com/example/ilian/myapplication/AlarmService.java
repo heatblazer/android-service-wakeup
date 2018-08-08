@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 
-
 public class AlarmService extends Service
 {
     private  Thread mWorker = null;
