@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     boolean mBound = false;
 
     Intent mServiceIntent = null;
-    private SensorService mSensorService = null;
+    private HttpService mService= null;
     Context ctx;
 
     private void setupUserPerms()
@@ -76,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupUserPerms(); // ivz - test
 
-        mSensorService = new SensorService(getCtx());
-        mServiceIntent = new Intent(getCtx(), mSensorService.getClass());
-        if (!isMyServiceRunning(mSensorService.getClass()))
+        mService = new HttpService(getCtx());
+        mServiceIntent = new Intent(getCtx(), mService.getClass());
+        if (!isMyServiceRunning(mService.getClass()))
         {
             startService(mServiceIntent);
         }
@@ -99,8 +99,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d ("isMyServiceRunning?", false+"");
         return false;
     }
-
-
 
     @Override
     protected void onStart()

@@ -31,14 +31,12 @@ import java.util.TimerTask;
     'https://thingspeak.com/channels/401474/feed.csv?results=1'
      */
 
-
 public class HttpService extends  Service
 {
 
     private final  String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
 
     private  static int counter = 0;
-    private HttpService() {}
     private File mFile = null;
     private Timer mTimer = null;
     private TimerTask timerTask = null;
@@ -84,22 +82,29 @@ public class HttpService extends  Service
         return file;
     }
 
-    private void writeTestFile()
+
+    private void writeToFile(String text)
     {
+        if (mFile == null)
+        {
+            mFile = getTempFile(null, "mytmpfile");
+        }
         try
         {
-            testHttp();
-            String s = new String("TESTTIMER +++ " + (counter++));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            FileOutputStream fs = new FileOutputStream(mFile);
+            try {
+                fs.write(text.getBytes());
+            } catch (Exception ex) {}
+            finally {
+                fs.close();
+            }
+        } catch (Exception ex) {}
     }
 
-    String getCsvWParams(String param)
+    private String getCsvWParams(String param)
     {
         return  URL_401474_CSV + param;
     }
-
 
     private  void testHttp()
     {
@@ -117,6 +122,7 @@ public class HttpService extends  Service
             if (output != null)
             {
                 Log.d("IVZ", output);
+                writeToFile(output);
             }
             else
             {
@@ -132,6 +138,9 @@ public class HttpService extends  Service
             urlConnection.disconnect();
         }
     }
+
+
+    private HttpService() {}
 
     public  HttpService(Context ctx)
     {
@@ -157,7 +166,7 @@ public class HttpService extends  Service
         timerTask = new TimerTask()
         {
             public void run() {
-                writeTestFile();
+                testHttp();
             }
         };
     }

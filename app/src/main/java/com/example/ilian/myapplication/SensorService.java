@@ -35,7 +35,6 @@ public class SensorService extends Service {
 
     UrlConnection mUrl = null;
 
-    Alarm mAlarm = null;
 
     File mFile = null;
 
