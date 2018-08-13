@@ -122,7 +122,7 @@ public class HttpService extends  Service
             if (output != null)
             {
                 Log.d("IVZ", output);
-                writeToFile(output);
+   //             writeToFile(output);
             }
             else
             {
@@ -140,7 +140,7 @@ public class HttpService extends  Service
     }
 
 
-    private HttpService() {}
+    public HttpService() {}
 
     public  HttpService(Context ctx)
     {

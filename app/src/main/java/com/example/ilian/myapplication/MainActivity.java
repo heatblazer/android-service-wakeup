@@ -1,6 +1,7 @@
 package com.example.ilian.myapplication;
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ServiceConnection;
@@ -34,9 +35,10 @@ public class MainActivity extends AppCompatActivity {
     String msg = "TestActivity";
     boolean mBound = false;
 
-    Intent mServiceIntent = null;
+    private Intent mServiceIntent = null;
     private HttpService mService= null;
-    Context ctx;
+    private Context ctx;
+    private  Alarm alarm = null;
 
     private void setupUserPerms()
     {
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupUserPerms(); // ivz - test
 
+        alarm = new Alarm(ctx, this);
+        alarm.SetAlarm();
         mService = new HttpService(getCtx());
         mServiceIntent = new Intent(getCtx(), mService.getClass());
         if (!isMyServiceRunning(mService.getClass()))

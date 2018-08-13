@@ -11,7 +11,7 @@ public class ServiceRestarter extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         Log.d(ServiceRestarter.class.getSimpleName(), "[IVZ]: Service stopped. Needs restart...");
-            context.startService(new Intent(context, SensorService.class));
+            context.startService(new Intent(context, HttpService.class));
     }
 }
 

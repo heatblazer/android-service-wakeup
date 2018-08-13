@@ -33,6 +33,7 @@
             android:enabled="true">
         </service>
 
+        <receiver android:name=".AlarmReceiver"/>
     <!--service restarter -->
         <receiver
             android:name=".ServiceRestarter"
