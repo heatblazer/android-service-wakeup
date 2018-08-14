@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import java.util.Calendar;
 
@@ -25,7 +26,6 @@ public class Alarm
     }
 
 
-
     public  void SetAlarm()
     {
 
@@ -33,11 +33,14 @@ public class Alarm
         Intent myIntent = new Intent(parent, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(parent, 0, myIntent, 0);
 
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 2);
         calendar.set(Calendar.MINUTE, 50);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                10 * 1000,
+                pendingIntent);
     }
 
     public  void CancelAlarm()
