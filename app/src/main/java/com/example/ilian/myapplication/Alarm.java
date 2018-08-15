@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -62,3 +63,34 @@ public class Alarm
         }
     }
 }
+
+
+/*
+
+public final void setAlarm(int seconds) {
+    // create the pending intent
+    Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,
+            intent, 0);
+    // get the alarm manager, and scedule an alarm that calls the receiver
+    ((AlarmManager) getSystemService(ALARM_SERVICE)).set(
+            AlarmManager.RTC, System.currentTimeMillis() + seconds
+                    * 1000, pendingIntent);
+    Toast.makeText(MainActivity.this, "Timer set to " + seconds + " seconds.",
+            Toast.LENGTH_SHORT).show();
+}
+
+public static class AlarmReceiver extends BroadcastReceiver {
+    public void onReceive(Context context, Intent intent) {
+        Log.d("-", "Receiver3");
+    }
+}
+ */
+
+/*
+
+ <receiver android:name="com.example.test.MainActivity$AlarmReceiver" >
+    </receiver>
+
+ */
