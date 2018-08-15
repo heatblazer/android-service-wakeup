@@ -15,6 +15,13 @@ public class UdpMessage implements IMessage
 
     private  AsyncTask<Void, Void, Void> asyncClient;
     private   String message;
+    private String host;
+    private int port;
+
+    public UdpMessage(String host, int port)
+    {
+        this.host = host; this.port = port;
+    }
 
     public  UdpMessage()
     {
@@ -30,7 +37,8 @@ public class UdpMessage implements IMessage
             protected Void doInBackground(Void... voids)
             {
                 Inet4Address address = null;
-                try {
+                try
+                {
                     address = (Inet4Address) Inet4Address.getByName("10.4.25.57");
                 }
                 catch (Exception ex) {}
@@ -66,8 +74,10 @@ public class UdpMessage implements IMessage
             }
         };
 
-        if (Build.VERSION.SDK_INT >= 11) asyncClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        else asyncClient.execute();
+        if (Build.VERSION.SDK_INT >= 11)
+            asyncClient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            asyncClient.execute();
     }
 
     @Override
@@ -75,6 +85,5 @@ public class UdpMessage implements IMessage
     {
         return  null;
     }
-
 
 }

@@ -25,6 +25,7 @@ import com.example.ilian.utils.UdpMessage;
 public class ThingpseakUrl {
 
     private final String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
+    private String url;
     UdpMessage myMessage ;
 
     private String readStream(InputStream input) {
@@ -73,6 +74,12 @@ public class ThingpseakUrl {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public  ThingpseakUrl(String url)
+    {
+        this.url = url;
+        myMessage = new UdpMessage();
     }
 
 

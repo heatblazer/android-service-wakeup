@@ -19,21 +19,21 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
     public void onReceive(final Context context, Intent intent) {
 
         Thread t = null;
-        try {
+        try
+        {
              t = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     thingspeakUrl.testHttp();
                 }
             });
-            t.start();
+                t.start();
         }
         catch (Exception ex)
         {
+            Log.d("[IVZ]:", ex.getMessage());
         }
 
-        //MainActivity.getTextView2().setText("Enough Rest. Do Work Now!");
-        Log.d("[IVZ]:", "Alarm recieved... ringing");
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
         ringtone.play();

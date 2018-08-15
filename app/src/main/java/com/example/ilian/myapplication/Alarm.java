@@ -31,7 +31,18 @@ public class Alarm
 
         alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
         Intent myIntent = new Intent(parent, AlarmReceiver.class);
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         pendingIntent = PendingIntent.getBroadcast(parent, 0, myIntent, 0);
+
+  //      PendingIntent pendingIntent = PendingIntent.getActivity(parent, 1, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        /*
+
+         Intent intent = new Intent(ReminderActivity.this, ReminderActivity.class);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+         */
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 2);
