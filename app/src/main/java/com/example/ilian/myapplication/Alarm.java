@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.widget.Toast;
 
+import com.example.ilian.helpers.CustomNotifier;
+
 import java.util.Calendar;
 
 public class Alarm
@@ -18,12 +20,14 @@ public class Alarm
     private PendingIntent pendingIntent = null;
     private Context context = null;
     private Activity parent = null;
-
+    //private CustomNotifier customNotifier = null;
 
     public Alarm(Context ctx, Activity activity)
     {
         context = ctx;
         parent = activity;
+        //customNotifier  = new CustomNotifier(ctx);
+
     }
 
 
@@ -53,6 +57,8 @@ public class Alarm
                 SystemClock.elapsedRealtime(),
                 10 * 1000,
                 pendingIntent);
+
+       // customNotifier.Notify();
     }
 
     public  void CancelAlarm()

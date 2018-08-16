@@ -1,4 +1,5 @@
 package com.example.ilian.myapplication;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -6,6 +7,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+
+import com.example.ilian.helpers.CustomNotifier;
+
 import java.lang.Thread;
 
 
@@ -23,7 +27,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
         {
              t = new Thread(new Runnable() {
                 @Override
-                public void run() {
+                public void run()
+                {
                     thingspeakUrl.testHttp();
                 }
             });
@@ -33,6 +38,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
         {
             Log.d("[IVZ]:", ex.getMessage());
         }
+
 
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
