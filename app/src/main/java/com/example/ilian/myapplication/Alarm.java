@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.widget.Toast;
@@ -53,10 +54,16 @@ public class Alarm
         calendar.set(Calendar.HOUR_OF_DAY, 2);
         calendar.set(Calendar.MINUTE, 50);
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime(),
-                10 * 1000,
-                pendingIntent);
+        if (Build.VERSION.SDK_INT < 19) {
+            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    SystemClock.elapsedRealtime(),
+                    10 * 1000,
+                    pendingIntent);
+        }
+        else
+        {
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30 *1000, pendingIntent);
+        }
 
        // customNotifier.Notify();
     }
