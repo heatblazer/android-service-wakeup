@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.example.ilian.helpers.CustomNotifier;
 
 import java.util.Calendar;
+
+import static android.content.Context.POWER_SERVICE;
 
 public class Alarm
 {
@@ -21,6 +24,7 @@ public class Alarm
     private PendingIntent pendingIntent = null;
     private Context context = null;
     private Activity parent = null;
+    PowerManager.WakeLock wakeLock = null;
     //private CustomNotifier customNotifier = null;
 
     public Alarm(Context ctx, Activity activity)
@@ -29,6 +33,10 @@ public class Alarm
         parent = activity;
         //customNotifier  = new CustomNotifier(ctx);
 
+        PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "MyApp::MyWakelockTag");
+        wakeLock.acquire();
     }
 
 
@@ -62,7 +70,17 @@ public class Alarm
         }
         else
         {
-            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 30 *1000, pendingIntent);
+  //          alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, SystemClock.elapsedRealtime() + 3000, pendingIntent);
+            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, 3000, pendingIntent);
+            if (Build.VERSION.SDK_INT  >= 23) {
+             //   alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+             //           SystemClock.elapsedRealtime() + 3000,
+             //           pendingIntent);
+                alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                        SystemClock.elapsedRealtime(),
+                        30 * 1000,
+                        pendingIntent);
+            }
         }
 
        // customNotifier.Notify();

@@ -16,12 +16,8 @@ import java.lang.Thread;
 public class AlarmReceiver extends WakefulBroadcastReceiver
 {
 
-
-    static ThingpseakUrl thingspeakUrl = new ThingpseakUrl();
-
     @Override
     public void onReceive(final Context context, Intent intent) {
-
         Thread t = null;
         try
         {
@@ -29,7 +25,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
                 @Override
                 public void run()
                 {
-                    thingspeakUrl.testHttp();
+                    ThingpseakUrl thingpseakUrl = new ThingpseakUrl();
+                    thingpseakUrl.testHttp();
                 }
             });
                 t.start();
@@ -39,8 +36,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
             Log.d("[IVZ]:", ex.getMessage());
         }
 
-
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
         ringtone.play();
     }

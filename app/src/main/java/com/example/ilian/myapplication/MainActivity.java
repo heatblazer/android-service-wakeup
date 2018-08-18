@@ -80,14 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
         alarm = new Alarm(ctx, this);
         alarm.SetAlarm();
-       /*
-        mService = new HttpService(getCtx());
-        mServiceIntent = new Intent(getCtx(), mService.getClass());
-        if (!isMyServiceRunning(mService.getClass()))
-        {
-            startService(mServiceIntent);
-        }
-        */
+
         Log.d(msg, "The onCreate() event");
     }
 
