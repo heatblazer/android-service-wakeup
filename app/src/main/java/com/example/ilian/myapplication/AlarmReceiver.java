@@ -15,9 +15,12 @@ import java.lang.Thread;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver
 {
+    public static Alarm alarm = null;
+
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
         Thread t = null;
         try
         {
@@ -39,5 +42,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
         ringtone.play();
+
+        AlarmReceiver.alarm.CancelAlarm();
+        AlarmReceiver.alarm.SetAlarm();
     }
 }

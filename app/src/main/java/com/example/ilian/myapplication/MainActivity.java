@@ -78,8 +78,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupUserPerms(); // ivz - test
 
-        alarm = new Alarm(ctx, this);
-        alarm.SetAlarm();
+//        alarm = new Alarm(ctx, this);
+//        alarm.SetAlarm();
+//        AlarmReceiver.alarm = alarm;
+
+        mService = new HttpService();
 
         Log.d(msg, "The onCreate() event");
     }
@@ -103,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
     {
         super.onStart();
         // start the service
-//        Intent intent = new Intent(this, AlarmService.class);
-//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(this, ServiceRestarter.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     /*
@@ -137,14 +140,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void startMessager()
     {
-        /*
         mThread = new Thread(new Runnable() {
             @Override
             public void run()
             {
                 while(true)
                 {
-                    Log.d("Debug Message", mService.getServiceMessage());
+                    Log.d("[IVZ]:", "RUNNING!!!");
 
                     try {
                         Thread.sleep(1000);
@@ -154,9 +156,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
         mThread.start();
-        */
+
     }
 
     // service connection
@@ -166,17 +167,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
-            /*
+
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            AlarmService.LocalBinder binder = (AlarmService.LocalBinder) service;
-            mService = binder.getService();
+           // AlarmService.LocalBinder binder = (HttpService.L`ocalBinder) service;
+           // mService = binder.getService();
+
+
             mBound = true;
 
             if (mService != null)
             {
                 startMessager();
             }
-            */
+
         }
 
         @Override

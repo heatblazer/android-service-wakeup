@@ -44,9 +44,9 @@ public class Alarm
     {
 
         alarmManager = (AlarmManager) context.getSystemService(context.ALARM_SERVICE);
-        Intent myIntent = new Intent(parent, AlarmReceiver.class);
+        Intent myIntent = new Intent(context, AlarmReceiver.class);
         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        pendingIntent = PendingIntent.getBroadcast(parent, 0, myIntent, 0);
+        pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
 
   //      PendingIntent pendingIntent = PendingIntent.getActivity(parent, 1, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -65,7 +65,7 @@ public class Alarm
         if (Build.VERSION.SDK_INT < 19) {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
-                    10 * 1000,
+                    30 * 1000,
                     pendingIntent);
         }
         else
