@@ -34,6 +34,9 @@ import java.util.TimerTask;
 public class HttpService extends  Service
 {
 
+
+    private  Alarm alarm = null; // alarm instance from service
+
     private final  String URL_401474_CSV = "https://thingspeak.com/channels/401474/feed.csv";
 
     private  static int counter = 0;
@@ -139,6 +142,7 @@ public class HttpService extends  Service
         }
     }
 
+    private  Context mCtx = null;
 
     public HttpService() {}
 
@@ -146,14 +150,17 @@ public class HttpService extends  Service
     {
         super();
         Log.d("[IVZ]", "Simple service started...");
-        mFile = getTempFile(ctx, "myTestFile");
+//        mFile = getTempFile(ctx, "myTestFile");
+        if (ctx != null)
+            mCtx = ctx;
+        else
+            ctx = this;
     }
 
     public void startTimer()
     {
         //set a new Timer
         mTimer= new Timer();
-
         //initialize the TimerTask's job
         initializeTimerTask();
 
@@ -171,7 +178,6 @@ public class HttpService extends  Service
         };
     }
 
-
     public void stoptimertask()
     {
         //stop the timer, if it's not already null
@@ -186,10 +192,21 @@ public class HttpService extends  Service
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         startTimer();
-//        mAlarm = new Alarm();
-//        mAlarm.setAlarm(this);
-//        mUrl = new UrlConnection();
-//        mUrl.Create();
+        if (mCtx == null)
+            mCtx = this;
+
+        if (mCtx != null)
+        {
+            alarm = new Alarm(mCtx);
+            alarm.SetAlarm();
+            AlarmReceiver.alarm = alarm;
+            AlarmReceiver.sContext = mCtx;
+        }
+        else
+        {
+            Log.d("[IVZ]: HttpService", "Context is null?");
+        }
+
         return START_STICKY;
     }
 
@@ -200,16 +217,13 @@ public class HttpService extends  Service
         return null;
     }
 
-
     @Override
-    public void onDestroy() {
+    public void onDestroy()
+    {
         super.onDestroy();
         Log.d("EXIT", "ondestroy!");
         Intent broadcastIntent = new Intent("com.example.ilian.ServiceRestarter");
         sendBroadcast(broadcastIntent);
         stoptimertask();
     }
-
-
-
 }

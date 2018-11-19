@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private Intent mServiceIntent = null;
     private HttpService mService= null;
     private Context ctx;
-    private  Alarm alarm = null;
 
     private void setupUserPerms()
     {
@@ -78,13 +77,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setupUserPerms(); // ivz - test
 
-//        alarm = new Alarm(ctx, this);
-//        alarm.SetAlarm();
-//        AlarmReceiver.alarm = alarm;
+        mService = new HttpService(null );
+        mServiceIntent = new Intent(getCtx(), mService.getClass());
 
-        mService = new HttpService();
+        if (!isMyServiceRunning(mService.getClass()))
+        {
+            startService(mServiceIntent);
+        }
 
-        Log.d(msg, "The onCreate() event");
+        Log.d(msg, "MainActivity.onCreate()");
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -157,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mThread.start();
-
     }
 
     // service connection
@@ -166,12 +166,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+                                       IBinder service)
+        {
 
             // We've bound to LocalService, cast the IBinder and get LocalService instance
            // AlarmService.LocalBinder binder = (HttpService.L`ocalBinder) service;
            // mService = binder.getService();
-
 
             mBound = true;
 
@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
             {
                 startMessager();
             }
-
         }
 
         @Override
@@ -195,6 +194,5 @@ public class MainActivity extends AppCompatActivity {
         stopService(mServiceIntent);
         Log.i("[IVZ]", "MainActivity.onDestroy()!");
         super.onDestroy();
-
     }
 }

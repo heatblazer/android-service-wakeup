@@ -23,14 +23,14 @@ public class Alarm
     private AlarmManager alarmManager = null;
     private PendingIntent pendingIntent = null;
     private Context context = null;
-    private Activity parent = null;
+ //   private Activity parent = null;
     PowerManager.WakeLock wakeLock = null;
     //private CustomNotifier customNotifier = null;
 
-    public Alarm(Context ctx, Activity activity)
+    public Alarm(Context ctx)
     {
         context = ctx;
-        parent = activity;
+        //     parent = activity;
         //customNotifier  = new CustomNotifier(ctx);
 
         PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
@@ -39,6 +39,18 @@ public class Alarm
         wakeLock.acquire();
     }
 
+
+    public Alarm(Context ctx, Activity activity)
+    {
+        context = ctx;
+   //     parent = activity;
+        //customNotifier  = new CustomNotifier(ctx);
+
+        PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "MyApp::MyWakelockTag");
+        wakeLock.acquire();
+    }
 
     public  void SetAlarm()
     {
@@ -57,12 +69,12 @@ public class Alarm
             PendingIntent pendingIntent = PendingIntent.getActivity(ReminderActivity.this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
          */
 
-
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 2);
         calendar.set(Calendar.MINUTE, 50);
 //        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        if (Build.VERSION.SDK_INT < 19) {
+        if (Build.VERSION.SDK_INT < 19)
+        {
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
                     30 * 1000,
@@ -76,10 +88,14 @@ public class Alarm
              //   alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
              //           SystemClock.elapsedRealtime() + 3000,
              //           pendingIntent);
+             /*
                 alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                         SystemClock.elapsedRealtime(),
                         30 * 1000,
                         pendingIntent);
+                        */
+             alarmManager.setExactAndAllowWhileIdle
+                     (AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + 5 *60 * 1000 , pendingIntent);
             }
         }
 

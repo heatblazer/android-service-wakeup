@@ -16,6 +16,7 @@ import java.lang.Thread;
 public class AlarmReceiver extends WakefulBroadcastReceiver
 {
     public static Alarm alarm = null;
+    public  static   Context sContext = null;
 
 
     @Override
@@ -43,7 +44,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
         Ringtone ringtone = RingtoneManager.getRingtone(context, uri);
         ringtone.play();
 
-        AlarmReceiver.alarm.CancelAlarm();
-        AlarmReceiver.alarm.SetAlarm();
+//        AlarmReceiver.alarm.CancelAlarm();
+//        AlarmReceiver.alarm = null;
+//        AlarmReceiver.alarm = new Alarm(sContext);
+//        AlarmReceiver.alarm.SetAlarm();
     }
 }
